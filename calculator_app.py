@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPu
 
 class SuperCalculator:
     """This class can handle any number of inputs"""
-    # result: float = None
+    result: float = None
 
     def __init__(self):
         print("This is a super calculator which can handle any number of inputs")
@@ -70,6 +70,9 @@ class MainCalculatorWindow(QMainWindow):
 
         self.result_display = QLabel()
         self.layout.addWidget(self.result_display)
+
+        """Łączymy elementy okna z kalkulatorem"""
+        self.addition_button.clicked.connect()
 
 
 if __name__ == "__main__":
