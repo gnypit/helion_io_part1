@@ -1,3 +1,7 @@
+import sys
+from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QLineEdit, QLabel
+
+
 class SuperCalculator:
     """This class can handle any number of inputs"""
     # result: float = None
@@ -40,3 +44,18 @@ class SuperCalculator:
             return self.result  # koniec wykonywania metody
         except Exception as info:
             print(f"An exception occurred: {info}")
+
+
+class MainCalculatorWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.calculator = SuperCalculator()  # tworzymy instancję kalkulatora "wewnątrz" głównego okna aplikacji
+
+        """Zadajemy geometrię:"""
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
+        self.layout = QVBoxLayout(central_widget)
+        self.setWindowTitle("Kalkulator")
+        self.setGeometry(1000, 300, 400, 300)  # x, y, szerokość, wysokość
+
+        """Dodajemy elementy głównego okienka"""
