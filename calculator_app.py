@@ -59,3 +59,21 @@ class MainCalculatorWindow(QMainWindow):
         self.setGeometry(1000, 300, 400, 300)  # x, y, szerokość, wysokość
 
         """Dodajemy elementy głównego okienka"""
+        self.input_line = QLineEdit("Podaj liczby")
+        self.layout.addWidget(self.input_line)
+
+        self.addition_button = QPushButton("Dodaj")
+        self.layout.addWidget(self.addition_button)
+
+        self.multiplication_button = QPushButton("Pomnóż")
+        self.layout.addWidget(self.multiplication_button)
+
+        self.result_display = QLabel()
+        self.layout.addWidget(self.result_display)
+
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    main_window = MainCalculatorWindow()
+    main_window.show()
+    sys.exit(app.exec())
