@@ -2,7 +2,7 @@ import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QLineEdit, QLabel
 
 
-class SuperCalculator:  # TODO: dopisz metodę `clear_memory` & podłącz do aplikacji
+class SuperCalculator:
     """This class can handle any number of inputs"""
     result: float = None
 
@@ -45,6 +45,11 @@ class SuperCalculator:  # TODO: dopisz metodę `clear_memory` & podłącz do apl
         except Exception as info:
             print(f"An exception occurred: {info}")
 
+    def clear_memory(self):
+        """Czyszczenie ostatniego wyniku z pamięci"""
+        self.result = None
+        print("Pamięć wyczyszczona")
+
 
 class MainCalculatorWindow(QMainWindow):
     def __init__(self):
@@ -71,8 +76,12 @@ class MainCalculatorWindow(QMainWindow):
         self.result_display = QLabel()
         self.layout.addWidget(self.result_display)
 
+        self.clear_memory_button = QPushButton("Wyczyść pamięć")
+        self.layout.addWidget(self.clear_memory_button)
+
         """Łączymy elementy okna z kalkulatorem"""
         self.addition_button.clicked.connect(self.perform_addition)
+        self.clear_memory_button.clicked.connect(self.perform_memory_clearing)
 
     def perform_addition(self):
         try:
@@ -84,6 +93,10 @@ class MainCalculatorWindow(QMainWindow):
             self.result_display.setText(f"Zadział się problem - info: {info}")
 
     # TODO: stworzyć funkcję `perform_multiplication` & podłączyć odpowiednio do aplikacji
+
+    def perform_memory_clearing(self):
+        self.calculator.clear_memory()
+        self.result_display.setText("Pamięć wyczyszczona")
 
 
 if __name__ == "__main__":
