@@ -81,6 +81,7 @@ class MainCalculatorWindow(QMainWindow):
 
         """Łączymy elementy okna z kalkulatorem"""
         self.addition_button.clicked.connect(self.perform_addition)
+        self.multiplication_button.clicked.connect(self.perform_multiplication)
         self.clear_memory_button.clicked.connect(self.perform_memory_clearing)
 
     def perform_addition(self):
@@ -92,7 +93,14 @@ class MainCalculatorWindow(QMainWindow):
         except Exception as info:
             self.result_display.setText(f"Zadział się problem - info: {info}")
 
-    # TODO: stworzyć funkcję `perform_multiplication` & podłączyć odpowiednio do aplikacji
+    def perform_multiplication(self):
+        try:
+            input_text = self.input_line.text()
+            numbers = [float(num) for num in input_text.split(sep=",")]
+            result = self.calculator.multiply(*numbers)
+            self.result_display.setText(f"Wynik: {result}")
+        except Exception as info:
+            self.result_display.setText(f"Zadział się problem - info: {info}")
 
     def perform_memory_clearing(self):
         self.calculator.clear_memory()
