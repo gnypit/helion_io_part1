@@ -2,7 +2,7 @@ import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QLineEdit, QLabel
 
 
-class SuperCalculator:
+class SuperCalculator:  # TODO: dopisz metodę `clear_memory` & podłącz do aplikacji
     """This class can handle any number of inputs"""
     result: float = None
 
@@ -72,7 +72,18 @@ class MainCalculatorWindow(QMainWindow):
         self.layout.addWidget(self.result_display)
 
         """Łączymy elementy okna z kalkulatorem"""
-        self.addition_button.clicked.connect()
+        self.addition_button.clicked.connect(self.perform_addition)
+
+    def perform_addition(self):
+        try:
+            input_text = self.input_line.text()
+            numbers = [float(num) for num in input_text.split(sep=",")]
+            result = self.calculator.add(*numbers)
+            self.result_display.setText(f"Wynik: {result}")
+        except Exception as info:
+            self.result_display.setText(f"Zadział się problem - info: {info}")
+
+    # TODO: stworzyć funkcję `perform_multiplication` & podłączyć odpowiednio do aplikacji
 
 
 if __name__ == "__main__":
