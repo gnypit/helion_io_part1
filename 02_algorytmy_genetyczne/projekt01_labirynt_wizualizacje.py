@@ -12,12 +12,16 @@ import numpy as np
 def see_route(labyrinth: np.ndarray, moves_mapping: dict, steps: list,
               gif_filename='labirynt.gif', summary_filename='labirynt_summary.png'):
     """Funkcja przyjmująca na wejściu macierz reprezentującą labirynt (labyrinth), słownik dopasowujący kod ruchu
-    do zmiany odpowiednich współrzędnych"""
+    do zmiany odpowiednich współrzędnych — w macierzy z biblioteki numpy najpierw jest wsp. wiersza, a następnie wsp.
+    kolumny!
+
+    Wynikiem funkcji jest animacja GIF danej trasy przez labirynt oraz grafika PNG z podsumowaniem całej trasy.
+    """
     start_pos = (1, 1)
     fig, ax = plt.subplots()
     ax.set_aspect('equal')
 
-    # Rysowanie labiryntu
+    """Rysowanie labiryntu"""
     for i in range(len(labyrinth)):
         for j in range(len(labyrinth[i])):
             if labyrinth[i, j] == 1:
@@ -34,7 +38,7 @@ def see_route(labyrinth: np.ndarray, moves_mapping: dict, steps: list,
     path_x, path_y = [start_pos[1] + 0.5], [start_pos[0] + 0.5]
     pos = list(start_pos)
 
-    # Tworzenie trasy na podstawie kroków
+    """Tworzenie trasy na podstawie kroków"""
     for step in steps:
         move = moves_mapping[step]
         pos[0] += move[0]
@@ -42,28 +46,28 @@ def see_route(labyrinth: np.ndarray, moves_mapping: dict, steps: list,
         path_x.append(pos[1] + 0.5)
         path_y.append(pos[0] + 0.5)
 
-    # Funkcja do aktualizacji animacji
+    """Funkcja do aktualizacji animacji"""
     def update(num, path_x, path_y, line):
         line.set_data(path_x[:num], path_y[:num])
         return line,
 
-    # Inicjalizacja linii trasy
+    """Inicjalizacja linii trasy"""
     line, = ax.plot([], [], lw=2, color='red')
 
-    # Animacja
+    """Animacja"""
     ani = animation.FuncAnimation(fig, update, frames=len(path_x), fargs=[path_x, path_y, line], interval=200,
                                   blit=True)
 
-    # Ustawienia osi
+    """Ustawienia osi"""
     plt.xlim(0, 12)
     plt.ylim(0, 12)
     plt.gca().invert_yaxis()
 
-    # Zapisanie animacji jako GIF
+    """Zapisanie animacji jako GIF"""
     ani.save(gif_filename, writer='imagemagick')
     print(f"Wygenerowano animację trasy przez labirynt")
 
-    # Rysowanie całej trasy na grafice PNG
+    """Rysowanie całej trasy na grafice PNG"""
     fig, ax = plt.subplots()
     ax.set_aspect('equal')
 
@@ -79,12 +83,12 @@ def see_route(labyrinth: np.ndarray, moves_mapping: dict, steps: list,
 
     ax.plot(path_x, path_y, lw=2, color='red')
 
-    # Ustawienia osi
+    """Ustawienia osi"""
     plt.xlim(0, 12)
     plt.ylim(0, 12)
     plt.gca().invert_yaxis()
 
-    # Zapisanie obrazu jako PNG
+    """Zapisanie obrazu jako PNG"""
     plt.savefig(summary_filename)
     plt.close()
     print(f"Wykonano grafikę z całą trasą przez labirynt")
