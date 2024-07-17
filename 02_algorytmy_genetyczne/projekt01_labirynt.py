@@ -9,7 +9,7 @@ import pygad
 import tqdm
 
 from time import time
-from projekt01_labirynt_wizualizacje import see_route
+from projekt01_labirynt_wizualizacje import see_route, draw_labyrinth
 
 """Labirynt zakodowano za pomocą macierzy o elementach 0 i 1. Zero oznacza pole dozwolone, po którym można się poruszać, 
 natomiast pole czarne oznacza ścianę; na te pola nie wolno wchodzić. Włącznie ze ścianami na granicy labiryntu, ma on 
@@ -52,10 +52,18 @@ moves_mapping = {
 
 
 def main():
+    """Główna funkcja wykonująca nasz program"""
+
     # Przykład użycia funkcji do wizualizacji trasy
     steps = [2, 2, 4, 4, 4, 1, 4, 2, 2, 1, 4, 4, 1, 1, 1, 4, 2, 2, 4, 2, 4, 2]
     see_route(steps=steps, labyrinth=labyrinth, moves_mapping=moves_mapping)
-    print("Plik wygenerowany poprawnie")
+    print("Pliki wygenerowane poprawnie.")
+
+    # Stworzę jeszcze pusty labirynt do analizy
+    fig, ax = plt.subplots()
+    draw_labyrinth(plot_object=ax, labyrinth=labyrinth)
+    plt.savefig("pusty_labirynt.png")
+    print("Pusty labirynt utworzony.")
 
 
 if __name__ == "__main__":
