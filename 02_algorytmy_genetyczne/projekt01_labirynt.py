@@ -54,7 +54,7 @@ moves_mapping = {
 def main():
     # Przykład użycia funkcji do wizualizacji trasy
     steps = [2, 2, 4, 4, 4, 1, 4, 2, 2, 1, 4, 4, 1, 1, 1, 4, 2, 2, 4, 2, 4, 2]
-    see_route(steps=steps)
+    see_route(steps=steps, labyrinth=labyrinth, moves_mapping=moves_mapping)
     print("Plik wygenerowany poprawnie")
 
 
