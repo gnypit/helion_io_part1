@@ -6,9 +6,11 @@ Wymagany program: ImageMagick https://www.techspot.com/downloads/5515-imagemagic
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import matplotlib.animation as animation
+import numpy as np
 
 
-def see_route(labyrinth, moves_mapping, steps, gif_filename='labirynt.gif', summary_filename='labirynt_summary.png'):
+def see_route(labyrinth: np.ndarray, moves_mapping: dict, steps: list,
+              gif_filename='labirynt.gif', summary_filename='labirynt_summary.png'):
     """Funkcja przyjmująca na wejściu macierz reprezentującą labirynt (labyrinth), słownik dopasowujący kod ruchu
     do zmiany odpowiednich współrzędnych"""
     start_pos = (1, 1)
