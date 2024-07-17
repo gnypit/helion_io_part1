@@ -5,11 +5,11 @@ Projekt nr 1: Labirynt
 import numpy as np
 import plotly.express as px
 import matplotlib.pyplot as plt
-import matplotlib.patches as patches
-import matplotlib.animation as animation
 import pygad
-from time import time
 import tqdm
+
+from time import time
+from projekt01_labirynt_wizualizacje import see_route
 
 """Labirynt zakodowano za pomocą macierzy o elementach 0 i 1. Zero oznacza pole dozwolone, po którym można się poruszać, 
 natomiast pole czarne oznacza ścianę; na te pola nie wolno wchodzić. Włącznie ze ścianami na granicy labiryntu, ma on 
