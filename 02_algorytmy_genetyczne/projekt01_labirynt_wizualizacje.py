@@ -9,6 +9,33 @@ import matplotlib.animation as animation
 import numpy as np
 
 
+def draw_labyrinth(plot_object, labyrinth: np.ndarray):
+    """Funkcja rysująca pusty labirynt (bez trasy) zgodnie z macierzą 'labyrinth', na podanym obiekcie
+    graficznym 'plot_object'.
+    """
+    for i in range(len(labyrinth)):
+        """Iteracja po kolejnych wierszach"""
+        for j in range(len(labyrinth[i])):
+            """Iteracja po kolejnych kolumnach"""
+            if labyrinth[i, j] == 1:
+                """Rysowanie ściany"""
+                rect = patches.Rectangle(
+                    (j, i), 1, 1, linewidth=1, edgecolor='black', facecolor='black'
+                )
+            else:
+                """Rysowanie pustego pola"""
+                rect = patches.Rectangle(
+                    (j, i), 1, 1, linewidth=1, edgecolor='grey', facecolor='white'
+                )
+            plot_object.add_patch(rect)
+
+    """Końcowe ustawienia"""
+    plot_object.set_xlim(0, 12)
+    plot_object.set_ylim(0, 12)
+    plot_object.invert_yaxis()
+    plot_object.set_aspect('equal')
+
+
 def see_route(labyrinth: np.ndarray, moves_mapping: dict, steps: list,
               gif_filename='labirynt.gif', summary_filename='labirynt_summary.png'):
     """Funkcja przyjmująca na wejściu macierz reprezentującą labirynt (labyrinth), słownik dopasowujący kod ruchu
@@ -19,7 +46,7 @@ def see_route(labyrinth: np.ndarray, moves_mapping: dict, steps: list,
     """
     start_pos = (1, 1)
     fig, ax = plt.subplots()
-    ax.set_aspect('equal')
+    draw_labyrinth()
 
     """Rysowanie labiryntu"""
     for i in range(len(labyrinth)):
