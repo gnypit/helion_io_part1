@@ -53,6 +53,13 @@ moves_mapping = {
 }
 
 
+"""Globalne zmienne/ustawienia algorytmu genetycznego"""
+num_generations = 2000
+sol_per_pop = 800
+num_parents_mating = 400
+elite_size = 2
+num_genes = 30
+
 def fitness_fun_1(ga_instance, route, route_idx):
     """Pierwsza funkcja fitnessu z samą metryką taxi"""
     y, x = 1, 1
@@ -77,6 +84,41 @@ def fitness_fun_1(ga_instance, route, route_idx):
     return fitness_val
 
 
+def fitness_fun_2(ga_instance, route, route_idx):
+    """Druga funkcja fitnessu z:
+     1) metryką taxi;
+     2) brakiem przyzwolenia na wejście w ścianę;
+     3) karą za zmarnowanie ruchu na odbicie się od ściany;
+     4) zmianą klauzuli warunkowych if/elif/else na case-match
+     """
+    y, x = 1, 1  # współrzędne pola "wejście"
+    is_problem = 0
+
+    for move in route:
+        """Analizujemy kolejne ruchy (move -> gen, route -> chromosom)"""
+        match move:
+            case 0:
+                new_y, new_x = y, x
+            case 1:
+                new_y, new_x = y, x - 1
+            case 2:
+                new_y, new_x = y, x + 1
+            case 3:
+                new_y, new_x = y - 1, x
+            case 4:
+                new_y, new_x = y + 1, x
+
+        """Wiemy, że wszystkie możliwe przypadki zostały już uwzględnione!"""
+        if labyrinth[new_y, new_x] == 0:
+            y, x = new_y, new_x
+        else:
+            is_problem += 1
+
+        x_distance, y_distance = abs(11 - x), abs(11 - y)
+        fitness_val = (22 - x_distance - y_distance) / 22 - is_problem/num_genes
+        return fitness_val
+
+
 def example_vis():
     # Przykład użycia funkcji do wizualizacji trasy
     steps = [2, 2, 4, 4, 4, 1, 4, 2, 2, 1, 4, 4, 1, 1, 1, 4, 2, 2, 4, 2, 4, 2]
@@ -88,14 +130,6 @@ def example_vis():
     draw_labyrinth(plot_object=ax, labyrinth=labyrinth)
     plt.savefig("pusty_labirynt.png")
     print("Pusty labirynt utworzony.")
-
-
-"""Globalne zmienne/ustawienia algorytmu genetycznego"""
-num_generations = 2000
-sol_per_pop = 800
-num_parents_mating = 400
-elite_size = 2
-num_genes = 30
 
 
 def main():
