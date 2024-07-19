@@ -114,9 +114,9 @@ def fitness_fun_2(ga_instance, route, route_idx):
         else:
             is_problem += 1
 
-        x_distance, y_distance = abs(11 - x), abs(11 - y)
-        fitness_val = (22 - x_distance - y_distance) / 22 - is_problem/num_genes
-        return fitness_val
+    x_distance, y_distance = abs(11 - x), abs(11 - y)
+    fitness_val = (22 - x_distance - y_distance) / 22 - is_problem/num_genes
+    return fitness_val
 
 
 def example_vis():
@@ -146,7 +146,7 @@ def main():
             gene_space=gene_space,
             num_genes=num_genes,
             num_generations=num_generations,
-            fitness_func=fitness_fun_1,
+            fitness_func=fitness_fun_2,
             sol_per_pop=sol_per_pop,
             keep_parents=elite_size,
             parent_selection_type="tournament",
