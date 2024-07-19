@@ -54,7 +54,7 @@ def see_route(labyrinth: np.ndarray, moves_mapping: dict, steps: list,
     path_x, path_y = [start_pos[1] + 0.5], [start_pos[0] + 0.5]  # ścieżka zaczyna się w środku pola wejścia, stąd 0.5
     pos = list(start_pos)
     for step in steps:
-        move = moves_mapping[step]
+        move = moves_mapping[int(step)]
         pos[0] += move[0]
         pos[1] += move[1]
         path_x.append(pos[1] + 0.5)  # przesunięcie o 0.5, żeby linie były "wycentrowane", a nie wzdłuż krawędzi pól
