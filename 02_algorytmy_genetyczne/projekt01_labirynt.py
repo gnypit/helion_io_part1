@@ -40,6 +40,8 @@ labyrinth = np.array([
 4 - w dół.
 
 Dodatkowo, stworzono słownik mapujący to kodowanie do zmian odpowiednich współrzędnych.
+moves_mapping = {ruch: (zmiana y, zmiana x), ...}
+y jest pierwszą wsp. w macierzy, ponieważ to nr wiersza!
 """
 gene_space = [0, 1, 2, 3, 4]
 moves_mapping = {
