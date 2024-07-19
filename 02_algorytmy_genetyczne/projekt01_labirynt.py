@@ -53,6 +53,30 @@ moves_mapping = {
 }
 
 
+def fitness_fun_1(ga_instance, route, route_idx):
+    """Pierwsza funkcja fitnessu z samą metryką taxi"""
+    y, x = 1, 1
+
+    for move in route:
+        """Analizujemy kolejne ruchy (move -> gen, route -> chromosom)"""
+        if move == 0:
+            new_y, new_x = y, x
+        elif move == 1:
+            new_y, new_x = y, x - 1
+        elif move == 2:
+            new_y, new_x = y, x + 1
+        elif move == 3:
+            new_y, new_x = y - 1, x
+        else:  # został już tylko możliwy ruch w dół
+            new_y, new_x = y + 1, x
+
+        y, x = new_y, new_x
+
+    x_distance, y_distance = abs(11 - x), abs(11 - y)
+    fitness_val = (22 - x_distance - y_distance) / 22
+    return fitness_val
+
+
 def main():
     """Główna funkcja wykonująca nasz program"""
 
