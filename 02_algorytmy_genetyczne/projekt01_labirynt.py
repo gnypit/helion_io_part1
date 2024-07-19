@@ -77,9 +77,7 @@ def fitness_fun_1(ga_instance, route, route_idx):
     return fitness_val
 
 
-def main():
-    """Główna funkcja wykonująca nasz program"""
-
+def example_vis():
     # Przykład użycia funkcji do wizualizacji trasy
     steps = [2, 2, 4, 4, 4, 1, 4, 2, 2, 1, 4, 4, 1, 1, 1, 4, 2, 2, 4, 2, 4, 2]
     see_route(steps=steps, labyrinth=labyrinth, moves_mapping=moves_mapping)
@@ -90,6 +88,64 @@ def main():
     draw_labyrinth(plot_object=ax, labyrinth=labyrinth)
     plt.savefig("pusty_labirynt.png")
     print("Pusty labirynt utworzony.")
+
+
+"""Globalne zmienne/ustawienia algorytmu genetycznego"""
+num_generations = 2000
+sol_per_pop = 800
+num_parents_mating = 400
+elite_size = 2
+num_genes = 30
+
+
+def main():
+    """Główna funkcja wykonująca nasz program"""
+    fitness_list = []
+    times = []
+    output_list = []
+    generations_no = []
+
+    for _ in tqdm.tqdm(range(10)):
+        start = time()  # sprawdzamy bieżący czas
+
+        ga_instance = pygad.GA(  # inicjujemy algorytm genetyczny
+            gene_space=gene_space,
+            num_genes=num_genes,
+            num_generations=num_generations,
+            fitness_func=fitness_fun_1,
+            sol_per_pop=sol_per_pop,
+            keep_parents=elite_size,
+            parent_selection_type="tournament",
+            mutation_type="random",
+            mutation_probability=0.1,
+            stop_criteria=["reach_1", "saturate_500"],
+            suppress_warnings=False,
+            num_parents_mating=num_parents_mating
+        )
+
+        ga_instance.run()  # uruchamiamy algorytm genetyczny
+        end = time()  # znowu sprawdzamy bieżący czas
+        times.append(end - start)  # liczymy, ile czasu upłynęło
+
+        """Pobieramy i zapamiętujemy wyniki:"""
+        solution, solution_fitness, solution_idx = ga_instance.best_solution()
+        generations_no.append(ga_instance.best_solution_generation)
+        fitness_list.append(solution_fitness)
+        output_list.append(solution)
+
+    """Wypisujemy wyniki:"""
+    print(f"Średni czas działania algorytmu genetycznego: {np.mean(times)}")
+    print(f"Średnia wartość funkcji fitnessu najlepszego rozwiązania: {np.mean(fitness_list)}")
+    print(f"Średnia liczba generacji do najlepszego rozwiązania: {np.mean(generations_no)}")
+
+    print("Historia wyników:")
+    file_number = 0
+    for output in output_list:
+        gif_filename = "animation_route_no_" + str(file_number) + ".gif"
+        png_filename = "summary_route_no_" + str(file_number) + ".png"
+        see_route(steps=output, labyrinth=labyrinth, moves_mapping=moves_mapping, gif_filename=gif_filename,
+                  summary_filename=png_filename)
+        file_number += 1
 
 
 if __name__ == "__main__":
