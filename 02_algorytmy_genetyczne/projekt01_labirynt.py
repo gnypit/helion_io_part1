@@ -119,6 +119,59 @@ def fitness_fun_2(ga_instance, route, route_idx):
     return fitness_val
 
 
+def fitness_fun_3(ga_instance, route, route_idx):
+
+    """Zaczynamy w (1,1)"""
+    y, x = 1, 1  # współrzędne pola "wejście"
+    is_problem = 0  # "licznik" problemów
+    bonus = 0  # licznik bonusu za pozostanie w mecie/wyjściu
+    zero_no = 0  # licznik "postojów" przed metą/wyjściem
+
+    """Lista list, gdzie każdy element jest listą wsp. pola, 
+    na którym znajdujemy się po wykonaniu nowego ruchu (zakodowanego w chromosomie)
+    """
+    history = [[x, y]]
+    # TODO: rozróżnienie w wizualizacjach pomiędzy faktycznie wykonaną, tj. dozwoloną trasą, a tą, którą chciał wykonać chromosom
+
+
+    for move in route:
+        """Bonus za pozostanie w mecie:"""
+        if history[-1] == [10, 10] and move == 0:
+            bonus += 1  # maksymalnie 10
+            continue
+
+        """Analizujemy kolejne ruchy (move -> gen, route -> chromosom)"""
+        match move:
+            case 0:
+                new_y, new_x = y, x
+                zero_no += 1
+            case 1:
+                new_y, new_x = y, x - 1
+            case 2:
+                new_y, new_x = y, x + 1
+            case 3:
+                new_y, new_x = y - 1, x
+            case 4:
+                new_y, new_x = y + 1, x
+
+        """Przydzielamy kary:"""
+        if labyrinth[new_y, new_x] == 0:
+            y, x = new_y, new_x
+            history.append([x, y])
+
+            """Sprawdzamy, czy powtarzamy położenie:"""
+            if history.count([x, y]) > 1:
+                is_problem += 1  # kara za powtórzenie pozycji
+        else:
+            is_problem += 1.25  # kara za zmarnowanie ruchu na odbicie się od ściany
+
+    """Obliczenie odległości za pomocą metryki taxi i nowa, prosta formuła na wart. f. fit., ograniczona z góry:"""
+    x_distance, y_distance = abs(11 - x), abs(11 - y)
+    fit_val = (((22 - x_distance - y_distance) + bonus) * 2 - is_problem - zero_no) / 64
+
+    return fit_val
+
+
 def example_vis():
     # Przykład użycia funkcji do wizualizacji trasy
     steps = [2, 2, 4, 4, 4, 1, 4, 2, 2, 1, 4, 4, 1, 1, 1, 4, 2, 2, 4, 2, 4, 2]
