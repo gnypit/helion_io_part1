@@ -53,6 +53,12 @@ moves_mapping = {
 }
 
 
+"""Rozwiązywanie labiryntu jest problemem NP-trudnym, tak jak problem plecakowym (złodzieja) oraz komiwojażera"""
+def fitness_fun(genetic_algorithm_instance, route, route_idx):
+    """Używamy metryki Taxi do ewaluacji tras przez labirynt"""
+    position = {'y': 1, 'x': 1}  # zaczynamy w (1,1)
+
+
 def main():
     """Główna funkcja wykonująca nasz program"""
 
