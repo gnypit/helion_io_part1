@@ -94,9 +94,7 @@ def fitness_fun(genetic_algorithm_instance, route, route_idx):
     return fitness_val
 
 
-def main():
-    """Główna funkcja wykonująca nasz program"""
-
+def example():
     # Przykład użycia funkcji do wizualizacji trasy
     steps = [2, 2, 4, 4, 4, 1, 4, 2, 2, 1, 4, 4, 1, 1, 1, 4, 2, 2, 4, 2, 4, 2]
     see_route(steps=steps, labyrinth=labyrinth, moves_mapping=moves_mapping)
@@ -107,6 +105,12 @@ def main():
     draw_labyrinth(plot_object=ax, labyrinth=labyrinth)
     plt.savefig("pusty_labirynt.png")
     print("Pusty labirynt utworzony.")
+
+
+def main():
+    """Główna funkcja wykonująca nasz program"""
+
+
 
 
 if __name__ == "__main__":
