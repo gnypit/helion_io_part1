@@ -75,8 +75,8 @@ def fitness_fun(genetic_algorithm_instance, route, route_idx):
         new_y, new_x = position.get('y') + moves_mapping.get(move)[0], position.get('x') + moves_mapping.get(move)[1]
 
         if 0 <= new_y <= 11 and 0 <= new_x <= 11:
-            """Po zweryfikowaniu, że nowe współrzędne są wewnątrz labiryntu (tzn. mieszczą się w macierzy), analizujemy
-            je dalej:
+            """Po zweryfikowaniu, że nowe współrzędne są wewnątrz labiryntu (tzn. mieszczą się w macierzy),
+            sprawdzamy, czy reprezentują dozwolone pole:
             """
             if labyrinth[new_y, new_x] == 0:
                 position['x'], position['y'] = new_x, new_y
@@ -108,9 +108,81 @@ def example():
 
 
 def main():
-    """Główna funkcja wykonująca nasz program"""
+    """Główna funkcja wykonująca, aplikująca algorytm genetyczny do labiryntu zgodnie z ustawieniami w zmiennych
+    globalnych oraz z wykorzystaniem zdefiniowanych w skrypcie `projekt01_labirynt_wizualizacje.py` funkcji
+    do wizualizacji.
+    """
+    fitness_list = []
+    times = []
+    output_list = []
+    generations_no = []  # nr generacji w danej iteracji, w której osiągnięto najlepsze rozwiązanie
 
+    for i in tqdm.tqdm(range(10)):
+        start = time()  # sprawdzamy czas na starcie
 
+        ga_instance = pygad.GA(
+            gene_space=gene_space,
+            num_genes=num_genes,
+            num_generations=num_generations,
+            num_parents_mating=num_parents_mating,
+            fitness_func=fitness_fun,
+            sol_per_pop=sol_per_pop,
+            parent_selection_type=selection,
+            mutation_type=mutation,
+            mutation_probability=mutation_prob,
+            stop_criteria=stop_criteria,
+            suppress_warnings=True,
+            K_tournament=k_tournament
+        )
+
+        ga_instance.run()  # uruchamiamy algorytm genetyczny
+        end = time()  # mierzymy czas na koniec
+        times.append(end - start)
+
+        ga_instance.plot_fitness()  # rysujemy wykres wartości fitnessu Vs nr generacji
+
+        """Zapamiętujemy parametry rozwiązania:"""
+        solution, solution_fitness, solution_idx = ga_instance.best_solution()
+        generations_no.append(ga_instance.best_solution_generation)
+        fitness_list.append(solution_fitness)
+        output_list.append(solution)
+
+        """Wizualizujemy wyniki (trasy, które chromosomy chciały przejść)"""
+        gif_filename = 'chromosome_animation' + str(i) + '.gif'
+        picture_filename = 'chromosome_picture' + str(i) + '.png'
+        see_route(labyrinth=labyrinth, moves_mapping=moves_mapping, steps=output_list[-1],
+                  gif_filename=gif_filename, summary_filename=picture_filename)
+
+        """Wizualizujemy faktyczną trasę, z pominięciem kroków polegających na wejściu na pole niedozwolone"""
+        x, y = 1, 1
+        history = []
+
+        for step in output_list[-1]:
+            new_y, new_x = y + moves_mapping.get(step)[0], x + moves_mapping.get(step)[1]
+            if 0 <= new_y <= 11 and 0 <= new_x <= 11:
+                """Po zweryfikowaniu, że nowe współrzędne są wewnątrz labiryntu (tzn. mieszczą się w macierzy),
+                sprawdzamy, czy reprezentują dozwolone pole:
+                """
+                if labyrinth[new_y, new_x] == 0:
+                    x, y = new_x, new_y
+                    history.append(step)
+                else:
+                    history.append(0)
+            else:
+                print(f"Dostaliśmy współrzędne x={new_x} oraz y={new_y} poza labiryntem (przy wizualizacji).")
+
+        gif_filename = 'actual_route_animation' + str(i) + '.gif'
+        picture_filename = 'actual_route_picture' + str(i) + '.png'
+        see_route(labyrinth=labyrinth, moves_mapping=moves_mapping, steps=history,
+                  gif_filename=gif_filename, summary_filename=picture_filename)
+
+    print(f"Średni czas działania algorytmu genetycznego: {np.mean(times)}")
+    print(f"Średnia wartość f. fitnessu najlepszego rozwiązania: {np.mean(fitness_list)}")
+    print(f"Średnia liczba generacji do otrzymania najlepszego rozwiązania: {np.mean(generations_no)}")
+
+    print(f"Historia wyników: \n")
+    for j in range(len(output_list)):
+        print(output_list[j])
 
 
 if __name__ == "__main__":
