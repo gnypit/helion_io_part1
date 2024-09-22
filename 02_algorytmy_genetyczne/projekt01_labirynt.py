@@ -55,6 +55,15 @@ moves_mapping = {
 
 """Ustawienia algorytmu genetycznego"""
 exit_labyrinth = {'y': 10, 'x': 10}  # współrzędne "wyjścia" z labiryntu
+num_generations = 4000
+sol_per_pop = 500
+num_parents_mating = 250
+num_genes = 30
+selection = "tournament"
+mutation = "random"
+mutation_prob = 0.15
+k_tournament = 10
+stop_criteria = "reach_1"
 
 
 """Rozwiązywanie labiryntu jest problemem NP-trudnym, tak jak problem plecakowym (złodzieja) oraz komiwojażera"""
