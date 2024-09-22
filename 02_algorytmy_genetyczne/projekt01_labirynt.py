@@ -53,10 +53,36 @@ moves_mapping = {
 }
 
 
+"""Ustawienia algorytmu genetycznego"""
+exit_labyrinth = {'y': 10, 'x': 10}  # współrzędne "wyjścia" z labiryntu
+
+
 """Rozwiązywanie labiryntu jest problemem NP-trudnym, tak jak problem plecakowym (złodzieja) oraz komiwojażera"""
 def fitness_fun(genetic_algorithm_instance, route, route_idx):
     """Używamy metryki Taxi do ewaluacji tras przez labirynt"""
     position = {'y': 1, 'x': 1}  # zaczynamy w (1,1)
+
+    for move in route:  # zmieniamy położenie w zależności od wykonanego ruchu
+        new_y, new_x = position.get('y') + moves_mapping.get(move)[0], position.get('x') + moves_mapping.get(move)[1]
+
+        if 0 <= new_y <= 11 and 0 <= new_x <= 11:
+            """Po zweryfikowaniu, że nowe współrzędne są wewnątrz labiryntu (tzn. mieszczą się w macierzy), analizujemy
+            je dalej:
+            """
+            if labyrinth[new_y, new_x] == 0:
+                position['x'], position['y'] = new_x, new_y
+        else:
+            print(f"Dostaliśmy współrzędne x={new_x} oraz y={new_y} poza labiryntem.")
+
+    """Najpierw obliczamy pomocnicze zmienne, dla czytelności:"""
+    x_distance = abs(exit_labyrinth.get('x') - position.get('x'))
+    y_distance = abs(exit_labyrinth.get('y') - position.get('y'))
+    sum_exit_coordinates = exit_labyrinth.get('x') + exit_labyrinth.get('y')
+
+    """Faktyczna wartość fitnessu, maksymalnie 1:"""
+    fitness_val = (sum_exit_coordinates - x_distance - y_distance) / sum_exit_coordinates
+
+    return fitness_val
 
 
 def main():
