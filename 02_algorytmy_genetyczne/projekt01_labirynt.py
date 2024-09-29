@@ -121,14 +121,16 @@ def fitness_fun_new(genetic_algorithm_instance, route, route_idx):
 
         new_y, new_x = position.get('y') + moves_mapping.get(move)[0], position.get('x') + moves_mapping.get(move)[1]
 
-        if 0 <= new_y <= 11 and 0 <= new_x <= 11:
-            """Po zweryfikowaniu, że nowe współrzędne są wewnątrz labiryntu (tzn. mieszczą się w macierzy),
-            sprawdzamy, czy reprezentują dozwolone pole:
-            """
-            if labyrinth[new_y, new_x] == 0:
-                position['x'], position['y'] = new_x, new_y
-        else:
-            print(f"Dostaliśmy współrzędne x={new_x} oraz y={new_y} poza labiryntem.")
+        """Sprawdzamy, czy nowe współrzędne wskazują na dozwolone pole:"""
+        if labyrinth[new_y, new_x] == 0:
+            position['x'], position['y'] = new_x, new_y
+            history.append(copy.deepcopy(position))
+
+            """Sprawdzamy, czy trzeba przydzielić karę za powtórzenie pozycji:"""
+            if history.count(position) > 1:
+                is_probem += pos_repeat_point
+        else:  # pole, na które chce wejść chromosom, nie jest dozwolone!
+            is_probem += hitting_a_wall_point
 
     """Najpierw obliczamy pomocnicze zmienne, dla czytelności:"""
     x_distance = abs(exit_labyrinth.get('x') - position.get('x'))
