@@ -80,7 +80,7 @@ def see_route(labyrinth: np.ndarray, moves_mapping: dict, steps: list,
 
     """Zapisanie animacji jako GIF"""
     ani.save(gif_filename, writer='imagemagick')
-    print(f"Wygenerowano animację trasy przez labirynt")
+    # print(f"Wygenerowano animację trasy przez labirynt")
 
     """Rysowanie całej trasy na grafice PNG"""
     fig, ax = plt.subplots()  # wykorzystuję ponownie zmienne lokalne
@@ -95,4 +95,4 @@ def see_route(labyrinth: np.ndarray, moves_mapping: dict, steps: list,
     """Zapisanie obrazu jako PNG"""
     plt.savefig(summary_filename)
     plt.close()
-    print(f"Wykonano grafikę z całą trasą przez labirynt")
+    # print(f"Wykonano grafikę z całą trasą przez labirynt")
