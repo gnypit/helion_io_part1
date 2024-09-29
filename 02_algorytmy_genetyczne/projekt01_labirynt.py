@@ -139,7 +139,16 @@ def main():
         end = time()  # mierzymy czas na koniec
         times.append(end - start)
 
-        ga_instance.plot_fitness()  # rysujemy wykres wartości fitnessu Vs nr generacji
+        """Ręcznie wizualizujemy historię fitnessu na przestrzeni generacji."""
+        fitness = ga_instance.best_solutions_fitness  # wartości na oś 0y
+        generations = list(range(len(fitness)))  # wartości na oś 0x
+        plt.plot(generations, fitness, color="lime", linewidth=2, drawstyle='steps-post', label='Fitness')
+        plt.xlabel("Generations")
+        plt.ylabel("Fitness")
+        plt.title("PyGAD - Generations vs. Fitness")
+        plt.legend()  # żeby mieć pewność, że legenda się wyświetli
+        plt.grid(True)
+        plt.show()
 
         """Zapamiętujemy parametry rozwiązania:"""
         solution, solution_fitness, solution_idx = ga_instance.best_solution()
