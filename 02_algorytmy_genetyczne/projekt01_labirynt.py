@@ -110,10 +110,15 @@ def fitness_fun_new(genetic_algorithm_instance, route, route_idx):
     początkowego stanu słownika położeń, zamiast przypisywać do listy dynamiczną strukturę danych.
     """
     history = [copy.deepcopy(position)]
-    is_probem = 0
-    bonus = 0
+    is_probem = 0  # początkowa wartość licznika problemów, do którego przydzielamy punkty kar
+    bonus = 0  # początkowa wartość bonusu, do której dodajemy punkty nagród
 
     for move in route:  # zmieniamy położenie w zależności od wykonanego ruchu
+
+        if position.get('x') == exit_labyrinth.get('x') and position.get('y') == exit_labyrinth.get('y') and move == 0:
+            bonus += bonus_point  # bonus za pozostanie w mecie
+            continue
+
         new_y, new_x = position.get('y') + moves_mapping.get(move)[0], position.get('x') + moves_mapping.get(move)[1]
 
         if 0 <= new_y <= 11 and 0 <= new_x <= 11:
