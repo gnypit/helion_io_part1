@@ -178,7 +178,7 @@ def main():
             num_genes=num_genes,
             num_generations=num_generations,
             num_parents_mating=num_parents_mating,
-            fitness_func=fitness_fun,
+            fitness_func=fitness_fun_new,
             sol_per_pop=sol_per_pop,
             parent_selection_type=selection,
             mutation_type=mutation,
@@ -197,7 +197,7 @@ def main():
         fitness = ga_instance.best_solutions_fitness  # wartości na oś 0y
         generations = list(range(len(fitness)))  # wartości na oś 0x
 
-        ax.plot(generations, fitness, color="lime", linewidth=2, drawstyle='steps-post', label='Fitness')
+        ax.plot(generations, fitness, color="lime", linewidth=4, drawstyle='steps-post', label='Fitness')
 
         ax.set_xlabel("Generations")
         ax.set_ylabel("Fitness")
