@@ -140,14 +140,17 @@ def main():
         times.append(end - start)
 
         """Ręcznie wizualizujemy historię fitnessu na przestrzeni generacji."""
+        fig, ax = plt.subplots()  # tworzymy osobną figurę na wykresy historii fitnessu!
         fitness = ga_instance.best_solutions_fitness  # wartości na oś 0y
         generations = list(range(len(fitness)))  # wartości na oś 0x
-        plt.plot(generations, fitness, color="lime", linewidth=2, drawstyle='steps-post', label='Fitness')
-        plt.xlabel("Generations")
-        plt.ylabel("Fitness")
-        plt.title("PyGAD - Generations vs. Fitness")
-        plt.legend()  # żeby mieć pewność, że legenda się wyświetli
-        plt.grid(True)
+
+        ax.plot(generations, fitness, color="lime", linewidth=2, drawstyle='steps-post', label='Fitness')
+
+        ax.set_xlabel("Generations")
+        ax.set_ylabel("Fitness")
+        ax.set_title("PyGAD - Generations vs. Fitness")
+        ax.legend()  # żeby mieć pewność, że legenda się wyświetli
+        ax.grid(True)
         plt.show()
 
         """Zapamiętujemy parametry rozwiązania:"""
