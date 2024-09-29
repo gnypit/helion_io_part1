@@ -70,6 +70,7 @@ stop_criteria = "reach_1"
 bonus_point = 2  # do nagród
 pos_repeat_point = 1  # do kary za powtórzenie pozycji
 hitting_a_wall_point = 1.25  # do kary za zmarnowanie ruchu na odbicie się od ściany
+max_bonus = 10 * bonus_point  # maksymalnie 10 kroków czekamy w mecie, do której można dotrzeć w 20 z 30 kroków
 
 """Rozwiązywanie labiryntu jest problemem NP-trudnym, tak jak problem plecakowym (złodzieja) oraz komiwojażera"""
 def fitness_fun(genetic_algorithm_instance, route, route_idx):
@@ -138,7 +139,10 @@ def fitness_fun_new(genetic_algorithm_instance, route, route_idx):
     sum_exit_coordinates = exit_labyrinth.get('x') + exit_labyrinth.get('y')
 
     """Faktyczna wartość fitnessu, maksymalnie 1:"""
-    fitness_val = (sum_exit_coordinates - x_distance - y_distance) / sum_exit_coordinates
+    fitness_val = (sum_exit_coordinates - x_distance - y_distance) * 2  # użycie metryki taxi
+    fitness_val += bonus  # dodajemy punkty nagród za czekanie w mecie "do końca"
+    fitness_val -= is_probem  # odejmujemy punkty kar
+    fitness_val = fitness_val / (sum_exit_coordinates * 2 + max_bonus)
 
     return fitness_val
 
