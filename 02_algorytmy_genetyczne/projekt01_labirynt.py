@@ -7,6 +7,7 @@ import plotly.express as px
 import matplotlib.pyplot as plt
 import pygad
 import tqdm
+import copy
 
 from time import time
 from projekt01_labirynt_wizualizacje import see_route, draw_labyrinth
@@ -65,11 +66,52 @@ mutation_prob = 0.15
 k_tournament = 10
 stop_criteria = "reach_1"
 
+"""Wagi punktów nagród & kar:"""
+bonus_point = 2  # do nagród
+pos_repeat_point = 1  # do kary za powtórzenie pozycji
+hitting_a_wall_point = 1.25  # do kary za zmarnowanie ruchu na odbicie się od ściany
 
 """Rozwiązywanie labiryntu jest problemem NP-trudnym, tak jak problem plecakowym (złodzieja) oraz komiwojażera"""
 def fitness_fun(genetic_algorithm_instance, route, route_idx):
     """Używamy metryki Taxi do ewaluacji tras przez labirynt"""
     position = {'y': 1, 'x': 1}  # zaczynamy w (1,1)
+
+    for move in route:  # zmieniamy położenie w zależności od wykonanego ruchu
+        new_y, new_x = position.get('y') + moves_mapping.get(move)[0], position.get('x') + moves_mapping.get(move)[1]
+
+        if 0 <= new_y <= 11 and 0 <= new_x <= 11:
+            """Po zweryfikowaniu, że nowe współrzędne są wewnątrz labiryntu (tzn. mieszczą się w macierzy),
+            sprawdzamy, czy reprezentują dozwolone pole:
+            """
+            if labyrinth[new_y, new_x] == 0:
+                position['x'], position['y'] = new_x, new_y
+        else:
+            print(f"Dostaliśmy współrzędne x={new_x} oraz y={new_y} poza labiryntem.")
+
+    """Najpierw obliczamy pomocnicze zmienne, dla czytelności:"""
+    x_distance = abs(exit_labyrinth.get('x') - position.get('x'))
+    y_distance = abs(exit_labyrinth.get('y') - position.get('y'))
+    sum_exit_coordinates = exit_labyrinth.get('x') + exit_labyrinth.get('y')
+
+    """Faktyczna wartość fitnessu, maksymalnie 1:"""
+    fitness_val = (sum_exit_coordinates - x_distance - y_distance) / sum_exit_coordinates
+
+    return fitness_val
+
+
+def fitness_fun_new(genetic_algorithm_instance, route, route_idx):
+    """Używamy metryki Taxi do ewaluacji tras przez labirynt. Dodatkowo, przydzielamy kary i nagrody za poszczególne
+    zachowania, aby trasy proponowane przez chromosomy były jak najbliższe tym faktycznym, po uwzględnieniu
+    "odbijania się" od ścian.
+    """
+    position = {'y': 1, 'x': 1}  # zaczynamy w (1,1)
+
+    """Aby uniknąć kłopotu z cechą 'mutable' słowników, zapamiętujemy w liście historii położeń kopię
+    początkowego stanu słownika położeń, zamiast przypisywać do listy dynamiczną strukturę danych.
+    """
+    history = [copy.deepcopy(position)]
+    is_probem = 0
+    bonus = 0
 
     for move in route:  # zmieniamy położenie w zależności od wykonanego ruchu
         new_y, new_x = position.get('y') + moves_mapping.get(move)[0], position.get('x') + moves_mapping.get(move)[1]
