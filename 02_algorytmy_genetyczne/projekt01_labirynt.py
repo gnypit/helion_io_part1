@@ -7,6 +7,7 @@ import plotly.express as px
 import matplotlib.pyplot as plt
 import pygad
 import tqdm
+import copy
 
 from time import time
 from projekt01_labirynt_wizualizacje import see_route, draw_labyrinth
@@ -53,126 +54,100 @@ moves_mapping = {
 }
 
 
-"""Globalne zmienne/ustawienia algorytmu genetycznego"""
-num_generations = 2000
-sol_per_pop = 800
-num_parents_mating = 400
-elite_size = 2
+"""Ustawienia algorytmu genetycznego"""
+exit_labyrinth = {'y': 10, 'x': 10}  # współrzędne "wyjścia" z labiryntu
+num_generations = 4000
+sol_per_pop = 500
+num_parents_mating = 250
 num_genes = 30
+selection = "tournament"
+mutation = "random"
+mutation_prob = 0.15
+k_tournament = 10
+stop_criteria = "reach_1"
 
-def fitness_fun_1(ga_instance, route, route_idx):
-    """Pierwsza funkcja fitnessu z samą metryką taxi"""
-    y, x = 1, 1
+"""Wagi punktów nagród & kar:"""
+bonus_point = 2  # do nagród
+pos_repeat_point = 1  # do kary za powtórzenie pozycji
+hitting_a_wall_point = 1.25  # do kary za zmarnowanie ruchu na odbicie się od ściany
+max_bonus = 10 * bonus_point  # maksymalnie 10 kroków czekamy w mecie, do której można dotrzeć w 20 z 30 kroków
 
-    for move in route:
-        """Analizujemy kolejne ruchy (move -> gen, route -> chromosom)"""
-        if move == 0:
-            new_y, new_x = y, x
-        elif move == 1:
-            new_y, new_x = y, x - 1
-        elif move == 2:
-            new_y, new_x = y, x + 1
-        elif move == 3:
-            new_y, new_x = y - 1, x
-        else:  # został już tylko możliwy ruch w dół
-            new_y, new_x = y + 1, x
+"""Rozwiązywanie labiryntu jest problemem NP-trudnym, tak jak problem plecakowym (złodzieja) oraz komiwojażera"""
+def fitness_fun(genetic_algorithm_instance, route, route_idx):
+    """Używamy metryki Taxi do ewaluacji tras przez labirynt"""
+    position = {'y': 1, 'x': 1}  # zaczynamy w (1,1)
 
-        y, x = new_y, new_x
+    for move in route:  # zmieniamy położenie w zależności od wykonanego ruchu
+        new_y, new_x = position.get('y') + moves_mapping.get(move)[0], position.get('x') + moves_mapping.get(move)[1]
 
-    x_distance, y_distance = abs(11 - x), abs(11 - y)
-    fitness_val = (22 - x_distance - y_distance) / 22
-    return fitness_val
-
-
-def fitness_fun_2(ga_instance, route, route_idx):
-    """Druga funkcja fitnessu z:
-     1) metryką taxi;
-     2) brakiem przyzwolenia na wejście w ścianę;
-     3) karą za zmarnowanie ruchu na odbicie się od ściany;
-     4) zmianą klauzuli warunkowych if/elif/else na case-match
-     """
-    y, x = 1, 1  # współrzędne pola "wejście"
-    is_problem = 0
-
-    for move in route:
-        """Analizujemy kolejne ruchy (move -> gen, route -> chromosom)"""
-        match move:
-            case 0:
-                new_y, new_x = y, x
-            case 1:
-                new_y, new_x = y, x - 1
-            case 2:
-                new_y, new_x = y, x + 1
-            case 3:
-                new_y, new_x = y - 1, x
-            case 4:
-                new_y, new_x = y + 1, x
-
-        """Wiemy, że wszystkie możliwe przypadki zostały już uwzględnione!"""
-        if labyrinth[new_y, new_x] == 0:
-            y, x = new_y, new_x
+        if 0 <= new_y <= 11 and 0 <= new_x <= 11:
+            """Po zweryfikowaniu, że nowe współrzędne są wewnątrz labiryntu (tzn. mieszczą się w macierzy),
+            sprawdzamy, czy reprezentują dozwolone pole:
+            """
+            if labyrinth[new_y, new_x] == 0:
+                position['x'], position['y'] = new_x, new_y
         else:
-            is_problem += 1
+            print(f"Dostaliśmy współrzędne x={new_x} oraz y={new_y} poza labiryntem.")
 
-    x_distance, y_distance = abs(11 - x), abs(11 - y)
-    fitness_val = (22 - x_distance - y_distance) / 22 - is_problem/num_genes
+    """Najpierw obliczamy pomocnicze zmienne, dla czytelności:"""
+    x_distance = abs(exit_labyrinth.get('x') - position.get('x'))
+    y_distance = abs(exit_labyrinth.get('y') - position.get('y'))
+    sum_exit_coordinates = exit_labyrinth.get('x') + exit_labyrinth.get('y')
+
+    """Faktyczna wartość fitnessu, maksymalnie 1:"""
+    fitness_val = (sum_exit_coordinates - x_distance - y_distance) / sum_exit_coordinates
+
     return fitness_val
 
 
-def fitness_fun_3(ga_instance, route, route_idx):
-
-    """Zaczynamy w (1,1)"""
-    y, x = 1, 1  # współrzędne pola "wejście"
-    is_problem = 0  # "licznik" problemów
-    bonus = 0  # licznik bonusu za pozostanie w mecie/wyjściu
-    zero_no = 0  # licznik "postojów" przed metą/wyjściem
-
-    """Lista list, gdzie każdy element jest listą wsp. pola, 
-    na którym znajdujemy się po wykonaniu nowego ruchu (zakodowanego w chromosomie)
+def fitness_fun_new(genetic_algorithm_instance, route, route_idx):
+    """Używamy metryki Taxi do ewaluacji tras przez labirynt. Dodatkowo, przydzielamy kary i nagrody za poszczególne
+    zachowania, aby trasy proponowane przez chromosomy były jak najbliższe tym faktycznym, po uwzględnieniu
+    "odbijania się" od ścian.
     """
-    history = [[x, y]]
-    # TODO: rozróżnienie w wizualizacjach pomiędzy faktycznie wykonaną, tj. dozwoloną trasą, a tą, którą chciał wykonać chromosom
+    position = {'y': 1, 'x': 1}  # zaczynamy w (1,1)
 
+    """Aby uniknąć kłopotu z cechą 'mutable' słowników, zapamiętujemy w liście historii położeń kopię
+    początkowego stanu słownika położeń, zamiast przypisywać do listy dynamiczną strukturę danych.
+    """
+    history = [copy.deepcopy(position)]
+    is_probem = 0  # początkowa wartość licznika problemów, do którego przydzielamy punkty kar
+    bonus = 0  # początkowa wartość bonusu, do której dodajemy punkty nagród
 
-    for move in route:
-        """Bonus za pozostanie w mecie:"""
-        if history[-1] == [10, 10] and move == 0:
-            bonus += 1  # maksymalnie 10
+    for move in route:  # zmieniamy położenie w zależności od wykonanego ruchu
+
+        if position.get('x') == exit_labyrinth.get('x') and position.get('y') == exit_labyrinth.get('y') and move == 0:
+            bonus += bonus_point  # bonus za pozostanie w mecie
             continue
 
-        """Analizujemy kolejne ruchy (move -> gen, route -> chromosom)"""
-        match move:
-            case 0:
-                new_y, new_x = y, x
-                zero_no += 1
-            case 1:
-                new_y, new_x = y, x - 1
-            case 2:
-                new_y, new_x = y, x + 1
-            case 3:
-                new_y, new_x = y - 1, x
-            case 4:
-                new_y, new_x = y + 1, x
+        new_y, new_x = position.get('y') + moves_mapping.get(move)[0], position.get('x') + moves_mapping.get(move)[1]
 
-        """Przydzielamy kary:"""
+        """Sprawdzamy, czy nowe współrzędne wskazują na dozwolone pole:"""
         if labyrinth[new_y, new_x] == 0:
-            y, x = new_y, new_x
-            history.append([x, y])
+            position['x'], position['y'] = new_x, new_y
+            history.append(copy.deepcopy(position))
 
-            """Sprawdzamy, czy powtarzamy położenie:"""
-            if history.count([x, y]) > 1:
-                is_problem += 1  # kara za powtórzenie pozycji
-        else:
-            is_problem += 1.25  # kara za zmarnowanie ruchu na odbicie się od ściany
+            """Sprawdzamy, czy trzeba przydzielić karę za powtórzenie pozycji:"""
+            if history.count(position) > 1:
+                is_probem += pos_repeat_point
+        else:  # pole, na które chce wejść chromosom, nie jest dozwolone!
+            is_probem += hitting_a_wall_point
 
-    """Obliczenie odległości za pomocą metryki taxi i nowa, prosta formuła na wart. f. fit., ograniczona z góry:"""
-    x_distance, y_distance = abs(11 - x), abs(11 - y)
-    fit_val = (((22 - x_distance - y_distance) + bonus) * 2 - is_problem - zero_no) / 64
+    """Najpierw obliczamy pomocnicze zmienne, dla czytelności:"""
+    x_distance = abs(exit_labyrinth.get('x') - position.get('x'))
+    y_distance = abs(exit_labyrinth.get('y') - position.get('y'))
+    sum_exit_coordinates = exit_labyrinth.get('x') + exit_labyrinth.get('y')
 
-    return fit_val
+    """Faktyczna wartość fitnessu, maksymalnie 1:"""
+    fitness_val = (sum_exit_coordinates - x_distance - y_distance) * 2  # użycie metryki taxi
+    fitness_val += bonus  # dodajemy punkty nagród za czekanie w mecie "do końca"
+    fitness_val -= is_probem  # odejmujemy punkty kar
+    fitness_val = fitness_val / (sum_exit_coordinates * 2 + max_bonus)
+
+    return fitness_val
 
 
-def example_vis():
+def example():
     # Przykład użycia funkcji do wizualizacji trasy
     steps = [2, 2, 4, 4, 4, 1, 4, 2, 2, 1, 4, 4, 1, 1, 1, 4, 2, 2, 4, 2, 4, 2]
     see_route(steps=steps, labyrinth=labyrinth, moves_mapping=moves_mapping)
@@ -186,53 +161,93 @@ def example_vis():
 
 
 def main():
-    """Główna funkcja wykonująca nasz program"""
+    """Główna funkcja wykonująca, aplikująca algorytm genetyczny do labiryntu zgodnie z ustawieniami w zmiennych
+    globalnych oraz z wykorzystaniem zdefiniowanych w skrypcie `projekt01_labirynt_wizualizacje.py` funkcji
+    do wizualizacji.
+    """
     fitness_list = []
     times = []
     output_list = []
-    generations_no = []
+    generations_no = []  # nr generacji w danej iteracji, w której osiągnięto najlepsze rozwiązanie
 
-    for _ in tqdm.tqdm(range(10)):
-        start = time()  # sprawdzamy bieżący czas
+    for i in tqdm.tqdm(range(10)):
+        start = time()  # sprawdzamy czas na starcie
 
-        ga_instance = pygad.GA(  # inicjujemy algorytm genetyczny
+        ga_instance = pygad.GA(
             gene_space=gene_space,
             num_genes=num_genes,
             num_generations=num_generations,
-            fitness_func=fitness_fun_2,
+            num_parents_mating=num_parents_mating,
+            fitness_func=fitness_fun_new,
             sol_per_pop=sol_per_pop,
-            keep_parents=elite_size,
-            parent_selection_type="tournament",
-            mutation_type="random",
-            mutation_probability=0.1,
-            stop_criteria=["reach_1", "saturate_500"],
-            suppress_warnings=False,
-            num_parents_mating=num_parents_mating
+            parent_selection_type=selection,
+            mutation_type=mutation,
+            mutation_probability=mutation_prob,
+            stop_criteria=stop_criteria,
+            suppress_warnings=True,
+            K_tournament=k_tournament
         )
 
         ga_instance.run()  # uruchamiamy algorytm genetyczny
-        end = time()  # znowu sprawdzamy bieżący czas
-        times.append(end - start)  # liczymy, ile czasu upłynęło
+        end = time()  # mierzymy czas na koniec
+        times.append(end - start)
 
-        """Pobieramy i zapamiętujemy wyniki:"""
+        """Ręcznie wizualizujemy historię fitnessu na przestrzeni generacji."""
+        fig, ax = plt.subplots()  # tworzymy osobną figurę na wykresy historii fitnessu!
+        fitness = ga_instance.best_solutions_fitness  # wartości na oś 0y
+        generations = list(range(len(fitness)))  # wartości na oś 0x
+
+        ax.plot(generations, fitness, color="lime", linewidth=4, drawstyle='steps-post', label='Fitness')
+
+        ax.set_xlabel("Generations")
+        ax.set_ylabel("Fitness")
+        ax.set_title("PyGAD - Generations vs. Fitness")
+        ax.legend()  # żeby mieć pewność, że legenda się wyświetli
+        ax.grid(True)
+        plt.show()
+
+        """Zapamiętujemy parametry rozwiązania:"""
         solution, solution_fitness, solution_idx = ga_instance.best_solution()
         generations_no.append(ga_instance.best_solution_generation)
         fitness_list.append(solution_fitness)
         output_list.append(solution)
 
-    """Wypisujemy wyniki:"""
-    print(f"Średni czas działania algorytmu genetycznego: {np.mean(times)}")
-    print(f"Średnia wartość funkcji fitnessu najlepszego rozwiązania: {np.mean(fitness_list)}")
-    print(f"Średnia liczba generacji do najlepszego rozwiązania: {np.mean(generations_no)}")
+        """Wizualizujemy wyniki (trasy, które chromosomy chciały przejść)"""
+        gif_filename = 'chromosome_animation' + str(i) + '.gif'
+        picture_filename = 'chromosome_picture' + str(i) + '.png'
+        see_route(labyrinth=labyrinth, moves_mapping=moves_mapping, steps=output_list[-1],
+                  gif_filename=gif_filename, summary_filename=picture_filename)
 
-    print("Historia wyników:")
-    file_number = 0
-    for output in output_list:
-        gif_filename = "animation_route_no_" + str(file_number) + ".gif"
-        png_filename = "summary_route_no_" + str(file_number) + ".png"
-        see_route(steps=output, labyrinth=labyrinth, moves_mapping=moves_mapping, gif_filename=gif_filename,
-                  summary_filename=png_filename)
-        file_number += 1
+        """Wizualizujemy faktyczną trasę, z pominięciem kroków polegających na wejściu na pole niedozwolone"""
+        x, y = 1, 1
+        history = []
+
+        for step in output_list[-1]:
+            new_y, new_x = y + moves_mapping.get(step)[0], x + moves_mapping.get(step)[1]
+            if 0 <= new_y <= 11 and 0 <= new_x <= 11:
+                """Po zweryfikowaniu, że nowe współrzędne są wewnątrz labiryntu (tzn. mieszczą się w macierzy),
+                sprawdzamy, czy reprezentują dozwolone pole:
+                """
+                if labyrinth[new_y, new_x] == 0:
+                    x, y = new_x, new_y
+                    history.append(step)
+                else:
+                    history.append(0)
+            else:
+                print(f"Dostaliśmy współrzędne x={new_x} oraz y={new_y} poza labiryntem (przy wizualizacji).")
+
+        gif_filename = 'actual_route_animation' + str(i) + '.gif'
+        picture_filename = 'actual_route_picture' + str(i) + '.png'
+        see_route(labyrinth=labyrinth, moves_mapping=moves_mapping, steps=history,
+                  gif_filename=gif_filename, summary_filename=picture_filename)
+
+    print(f"Średni czas działania algorytmu genetycznego: {np.mean(times)}")
+    print(f"Średnia wartość f. fitnessu najlepszego rozwiązania: {np.mean(fitness_list)}")
+    print(f"Średnia liczba generacji do otrzymania najlepszego rozwiązania: {np.mean(generations_no)}")
+
+    print(f"Historia wyników: \n")
+    for j in range(len(output_list)):
+        print(output_list[j])
 
 
 if __name__ == "__main__":

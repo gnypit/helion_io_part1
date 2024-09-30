@@ -1,0 +1,8 @@
+7 links on how to travel back in time in your Git repository:
+1) About reseting, e.g. for local changes: https://www.atlassian.com/git/tutorials/undoing-changes/git-reset
+2) Nice overview of different commands: https://www.atlassian.com/git/tutorials/resetting-checking-out-and-reverting
+3) In this thread there's a more decisive overview: https://stackoverflow.com/questions/8358035/whats-the-difference-between-git-revert-checkout-and-reset
+4) Version of comparison of different Git commands with screens: https://www.geeksforgeeks.org/git-difference-between-git-revert-checkout-and-reset/
+5) For those who prefer to use high-level tools, like GitKraken: https://www.gitkraken.com/blog/review-file-history-git
+6) Similar article from a well-recognised website: https://www.datacamp.com/tutorial/git-reset-revert-tutorial
+7) About reverting multiple Git commits: https://www.geeksforgeeks.org/how-to-revert-multiple-git-commits/
