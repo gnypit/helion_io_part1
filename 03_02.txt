@@ -1,0 +1,10 @@
+Kompilatory Vs. Interpretery:
+1. https://dev.to/vayolapradeep/how-python-programs-works-15f
+2. https://builtin.com/software-engineering-perspectives/compiler-vs-interpreter 
+
+A propos Python 3.13:
+1. https://docs.python.org/3/whatsnew/3.13.html
+2. https://realpython.com/courses/new-features-python-313/
+3. https://docs.python.org/3/tutorial/appendix.html#tut-interac
+4. https://docs.python.org/3/glossary.html#term-REPL
+5. https://docs.python.org/3/whatsnew/3.13.html#whatsnew313-free-threaded-cpython
