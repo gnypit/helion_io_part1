@@ -1,0 +1,2 @@
+Dokumentacja PyPy: https://doc.pypy.org/en/latest/index.html
+Instalacja PyPy: https://cs.au.dk/~gerth/ipsa19/index_installing.php
