@@ -1,0 +1,6 @@
+Order ID: 1007
+Client Name: Emma Green
+Items: Smartphone (1), Wireless Charger (2)
+Order Date: 2024-08-03
+Shipping Address: 321 Aspen Avenue, Keystone, CO
+Order Status: Processing

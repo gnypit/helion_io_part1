@@ -1,0 +1,6 @@
+Order ID: 1009
+Client Name: Grace Yellow
+Items: Gaming Laptop (1), Gaming Mouse (1), Gaming Headset (1)
+Order Date: 2024-08-05
+Shipping Address: 123 Elm Street, Hill Valley, CA
+Order Status: Delivered

@@ -1,0 +1,6 @@
+Order ID: 1008
+Client Name: Frank Blue
+Items: Tablet (1), Screen Protector (3), Stylus Pen (2)
+Order Date: 2024-08-04
+Shipping Address: 654 Redwood Road, Coast City, OR
+Order Status: Shipped

@@ -1,0 +1,6 @@
+Order ID: 1001
+Client Name: John Doe
+Items: Laptop (1), Wireless Mouse (2)
+Order Date: 2024-07-28
+Shipping Address: 123 Maple Street, Springfield, IL
+Order Status: Processing

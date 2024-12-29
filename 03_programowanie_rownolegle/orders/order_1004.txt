@@ -1,0 +1,6 @@
+Order ID: 1004
+Client Name: Bob Brown
+Items: Gaming Console (1), Gamepad (2), Headset (1)
+Order Date: 2024-07-31
+Shipping Address: 321 Birch Boulevard, Gotham, NJ
+Order Status: Processing

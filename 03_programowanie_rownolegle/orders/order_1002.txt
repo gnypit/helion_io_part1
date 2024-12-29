@@ -1,0 +1,6 @@
+Order ID: 1002
+Client Name: Jane Smith
+Items: Smartphone (1), Charging Cable (3)
+Order Date: 2024-07-29
+Shipping Address: 456 Oak Avenue, Metropolis, NY
+Order Status: Shipped

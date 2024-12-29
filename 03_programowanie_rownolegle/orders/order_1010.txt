@@ -1,0 +1,6 @@
+Order ID: 1010
+Client Name: Henry Orange
+Items: Smartwatch (1), Fitness Band (1), Smart Scale (1)
+Order Date: 2024-08-06
+Shipping Address: 456 Palm Avenue, Emerald City, TX
+Order Status: Processing

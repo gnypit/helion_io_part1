@@ -1,0 +1,6 @@
+Order ID: 1005
+Client Name: Carol White
+Items: Smartwatch (1), Fitness Band (1)
+Order Date: 2024-08-01
+Shipping Address: 654 Cedar Court, Star City, CA
+Order Status: Shipped

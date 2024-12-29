@@ -1,0 +1,6 @@
+Order ID: 1006
+Client Name: David Black
+Items: Laptop (1), Docking Station (1), Keyboard (1)
+Order Date: 2024-08-02
+Shipping Address: 987 Willow Street, Central City, FL
+Order Status: Delivered
