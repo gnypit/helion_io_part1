@@ -101,7 +101,7 @@ def fitness_fun(genetic_algorithm_instance, route, route_idx):
 
 
 def fitness_fun_new(genetic_algorithm_instance, route, route_idx):
-    """Używamy metryki Taxi do ewaluacji tras przez labirynt. Dodatkowo, przydzielamy kary i nagrody za poszczególne
+    """Używamy metryki Taxi do ewaluacji tras przez labirynt. Dodatkowo przydzielamy kary i nagrody za poszczególne
     zachowania, aby trasy proponowane przez chromosomy były jak najbliższe tym faktycznym, po uwzględnieniu
     "odbijania się" od ścian.
     """
