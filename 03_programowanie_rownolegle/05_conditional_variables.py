@@ -29,7 +29,7 @@ class KontoBlokada(Konto):
     blokada = Lock()
 
     def wplac(self):
-        for _ in range(100000):  # wykonujemy operacje więcej razy, niż bez blokady!
+        for _ in range(100000):  # wykonujemy operacje więcej razy niż bez blokady!
             self.blokada.acquire()
             self.hajsik += 10
             self.blokada.release()
@@ -47,7 +47,7 @@ class KontoWarunek(Konto):
     warunek = Condition()
 
     def wplac(self):
-        for _ in range(100000):  # wykonujemy operacje więcej razy, niż bez blokady!
+        for _ in range(100000):  # wykonujemy operacje więcej razy niż bez blokady!
             self.warunek.acquire()
             self.hajsik += 10
             self.warunek.notify()  # być może stan konta pozwoli na wydawanie pieniędzy
