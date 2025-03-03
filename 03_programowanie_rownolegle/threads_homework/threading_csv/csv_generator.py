@@ -5,7 +5,7 @@ import string
 from tqdm import tqdm
 
 
-def generate_large_csv_files(directory="csv_data", num_files=100, num_rows=10 ** 6, num_columns=10):
+def generate_large_csv_files(directory="csv_data", num_files=40, num_rows=10 ** 6, num_columns=10):
     """Generuje duże pliki CSV z losowymi danymi."""
     os.makedirs(directory, exist_ok=True)
 
