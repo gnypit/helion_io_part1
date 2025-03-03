@@ -1,9 +1,10 @@
 Szanowni Państwo!
 
 W tym folderze znajduje się generator danych tekstowych. Przy obecnych ustawieniach, powinien stworzyć 100 plików o
-łącznym rozmiarze ok. 3,5 GB. Przy tej ilości wciąż nie powinno być przyspieszenia w czasie pracy kodu
-sekwencyjnego Vs równoległego - wymagałoby to znacznie większego wolumenu danych. Dlatego w kursie skupiliśmy się na
-API, tzn. wykorzystywaliśmy opóźnienia w pobieraniu danych z Internetu, aby w tym samym czasie kod wykonywał zadania.
+łącznym rozmiarze ok. 3,5 GB. Załóżmy, że chcemy te dane wczytać i wypisać do jednego, wspólnego pliku, raportu.
+Przy tej ilości wciąż nie powinno być przyspieszenia w czasie pracy kodu sekwencyjnego Vs równoległego - wymagałoby
+to znacznie większego wolumenu danych. Dlatego w kursie skupiliśmy się na API, tzn. wykorzystywaliśmy opóźnienia
+w pobieraniu danych z Internetu, aby w tym samym czasie kod wykonywał zadania.
 
 Niemniej, zależy mi na pokazywaniu zarówno zalet, jak i wad pewnych rozwiązań. W związku z tym zachęcam
 do eksperymentowania z wolumenem danych i samymi kodami (sekwencyjnym oraz z wykorzystaniem 'threading'), aby porównać
@@ -11,7 +12,8 @@ czasy działania i jednocześnie przećwiczyć pisanie kodu równoległego na do
 
 W szczególności ciekawym może być sprawdzenie, czy kod równoległy działa szybciej dla wielu małych plików,
 czy mniejszej liczby, ale większych? Czy jest pewien sumaryczny rozmiar danych, przy którym kod równoległy zacznie
-działać w tym samym czasie, co sekwencyjny?
+działać w tym samym czasie, co sekwencyjny? Może w tym przypadku przez GIL nie da się równolegle działać szybciej
+niż sekwencyjnie? Proszę obudzić w sobie naukowca ;)
 
 Przykładowe pliki również tu zamieszczam - proszę do nich zaglądać dopiero po napisaniu własnych albo gdy się "utknie"!
 
