@@ -163,4 +163,5 @@ cython_debug/
 
 # ignorujemy duże pliki z danymi z prac domowych:
 03_programowanie_rownolegle/threads_homework/threading_text/text_data/
+03_programowanie_rownolegle/threads_homework/threading_text/reports/
 03_programowanie_rownolegle/threads_homework/threading_csv/csv_data/
