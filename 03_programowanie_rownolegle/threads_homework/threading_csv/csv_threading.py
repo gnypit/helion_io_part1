@@ -25,7 +25,7 @@ def process_csv(file_path, results, lock, progress_bar):
             progress_bar.update(1)
 
 
-def read_csv_threading(directory="csv_data", report_file="report_threading.txt", max_threads=4):
+def read_csv_threading(directory="csv_data", report_file="csv_wzorcowe_raporty/report_threading.txt", max_threads=4):
     """Czyta pliki CSV równolegle za pomocą `threading` i zapisuje raport."""
     start_time = time.time()
     report_lines = []

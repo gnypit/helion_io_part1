@@ -26,7 +26,7 @@ def process_csv(file_path):
         return file_path, None, None, None, None, None, str(e)
 
 
-def read_csv_parallel(directory="csv_data", report_file="report_parallel.txt", max_workers=4):
+def read_csv_parallel(directory="csv_data", report_file="csv_wzorcowe_raporty/report_parallel.txt", max_workers=4):
     """Czyta pliki CSV równolegle i zapisuje raport ze statystykami."""
     start_time = time.time()
     report_lines = []

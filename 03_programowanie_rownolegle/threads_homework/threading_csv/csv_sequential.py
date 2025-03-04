@@ -4,7 +4,7 @@ import time
 from tqdm import tqdm
 
 
-def read_csv_sequentially(directory="csv_data", report_file="report.txt"):
+def read_csv_sequentially(directory="csv_data", report_file="csv_wzorcowe_raporty/report.txt"):
     """Czyta pliki CSV sekwencyjnie i zapisuje raport ze statystykami."""
     start_time = time.time()
     report_lines = []
