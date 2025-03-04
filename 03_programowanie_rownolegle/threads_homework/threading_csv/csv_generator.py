@@ -5,7 +5,8 @@ from tqdm import tqdm
 
 
 def generate_large_csv_files(directory="csv_data", num_files=4, num_rows=10 ** 7, num_columns=10):
-    """Generuje duże pliki CSV z losowymi liczbami zmiennoprzecinkowymi."""
+    """Generuje duże pliki CSV z losowymi liczbami zmiennoprzecinkowymi. 4 pliki po 10^7 wierszy i 10 kolumn
+    to tlyko moja propozycja."""
     os.makedirs(directory, exist_ok=True)
 
     for i in tqdm(range(num_files), desc="Generating CSV files"):
