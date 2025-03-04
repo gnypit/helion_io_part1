@@ -1,7 +1,7 @@
 Witam wszystkich w repozytorium do kursu video "Inteligencja obliczeniowa. Algorytmy genetyczne i programowanie równoległe"!
 
 Na wstępie należą się podziękowania trzem osobom:
-1. Pani Beacie Chmiest z Wydawnictwa Helion, za wystąpienie z propozycją współpracy, propozycje i rady redaktorskie oraz przede wszystkim za cierpliwość przy moich ciągłych opóźnieniach w nadsyłaniu kolejnych filmów (przepraszam!);
+1. Pani Beacie Chmiest z Wydawnictwa Helion, za wystąpienie z propozycją współpracy, sugestie i rady redaktorskie oraz przede wszystkim za cierpliwość przy moich ciągłych opóźnieniach w nadsyłaniu kolejnych filmów (przepraszam!);
 2. Mojej żone Alicji, za wyrozumiałość, gdy nasze mieszkanie zmieniało się w studio nagraniowe o mało standardowych godzinach dnia i nocy;
 3. Mojemu tacie Tomaszowi, za wiele nocy spędzonych nad uczeniem mnie programowania w Pascalu, gdy byłem jeszcze w gimnazjum.
 
