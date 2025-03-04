@@ -23,7 +23,7 @@ def process_csv(file_path):
             max_value
         )
     except Exception as e:
-        return (file_path, None, None, None, None, None, str(e))
+        return file_path, None, None, None, None, None, str(e)
 
 
 def read_csv_parallel(directory="csv_data", report_file="report_parallel.txt", max_workers=4):
