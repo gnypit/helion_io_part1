@@ -1,7 +1,11 @@
 Szanowni Państwo!
 
 W tym folderze znajduje się generator danych tekstowych. Przy obecnych ustawieniach, powinien stworzyć 100 plików o
-łącznym rozmiarze ok. 3,5 GB. Załóżmy, że chcemy te dane wczytać i wypisać do jednego, wspólnego pliku, raportu.
+łącznym rozmiarze ok. 3,5 GB. Proszę pamiętać, że łączny rozmiar danych do przetworzenia powinien być mniejszy niż
+dostępna pamięć RAM - Python będzie te dane po wczytaniu "trzymać" właśnie w pamięci podręcznej i potrzebuje
+do tego miejsca.
+
+Załóżmy, że chcemy te dane wczytać i wypisać do jednego, wspólnego pliku, raportu.
 Przy tej ilości wciąż nie powinno być przyspieszenia w czasie pracy kodu sekwencyjnego Vs równoległego - wymagałoby
 to znacznie większego wolumenu danych. Dlatego w kursie skupiliśmy się na API, tzn. wykorzystywaliśmy opóźnienia
 w pobieraniu danych z Internetu, aby w tym samym czasie kod wykonywał zadania.
@@ -32,3 +36,6 @@ Przykładowy output kodu z wykorzystaniem 'threading':
 
 Alternatywnie można przećwiczyć pobieranie różnych wolumenów danych z portali, które takie możliwości poprzez API
 oferują. W przypadku danych pogodowych polecam bogaty wybór, aczkolwiek płatny, z Visual Crossing (dane pogodowe).
+
+Pozdrawiam serdecznie,
+Jakub T. Gnyp
