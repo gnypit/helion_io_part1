@@ -1,18 +1,7 @@
-@software{jakub_tomasz_gnyp_2025_15263439,
-  author       = {Jakub Tomasz Gnyp},
-  title        = {gnypit/helion\_io\_part1: Repozytorium z kodami do
-                   kursu z inteligencji obliczeniowej, cz. 1
-                  },
-  month        = apr,
-  year         = 2025,
-  publisher    = {Zenodo},
-  version      = {v1.0.0},
-  doi          = {10.5281/zenodo.15263439},
-  url          = {https://doi.org/10.5281/zenodo.15263439},
-  swhid        = {swh:1:dir:3fd365c767757f36ff2845d400ee4ebedd6e1821
-                   ;origin=https://doi.org/10.5281/zenodo.15263438;vi
-                   sit=swh:1:snp:d5192898c06cf24ef4a8d251995e88bf9449
-                   a009;anchor=swh:1:rel:a573b0968f7012cfb767ce9551f8
-                   a7244fb45dc4;path=gnypit-helion\_io\_part1-f52ba0d
-                  },
-}
+cff-version: 1.1.0
+message: "If you use this software, please cite it as below."
+authors: Jakub Tomasz Gnyp
+orcid: https://orcid.org/0000-0000-0000-0000
+title:gnypit/helion_io_part1: Repozytorium z kodami do kursu z inteligencji obliczeniowej, cz. 1
+version: v1.0.0
+date-released: 2025-04-22
